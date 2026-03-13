@@ -11,8 +11,8 @@ st.title("🗳️ Eleição do Grêmio Estudantil")
 # 1. GSheets
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-students_df = conn.read(worksheet="alunos", ttl=0)
-candidates_df = conn.read(worksheet="candidatos", ttl=0)
+students_df = conn.read(worksheet="alunos", ttl="1h")
+candidates_df = conn.read(worksheet="candidatos", ttl=5)
 
 students_df['ja_votou'] = pd.to_numeric(students_df['ja_votou'], errors='coerce').fillna(0).astype(int)
 
@@ -107,7 +107,7 @@ if st.session_state.selected_candidate:
         # Atualiza Votos
         fuse_br = pytz.timezone("America/Sao_Paulo")
         now_br = datetime.now(fuse_br)
-        votes_df = conn.read(worksheet="votos", ttl=0)
+        votes_df = conn.read(worksheet="votos", ttl=5)
         
         new_vote = pd.DataFrame([{
             "data_hora": now_br.strftime("%d/%m/%Y %H:%M:%S"),
